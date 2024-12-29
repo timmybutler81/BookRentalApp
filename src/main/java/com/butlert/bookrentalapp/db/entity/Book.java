@@ -1,40 +1,57 @@
 package com.butlert.bookrentalapp.db.entity;
 
+import com.butlert.bookrentalapp.utils.BooleanConverter;
 import jakarta.persistence.*;
 
+import java.util.ArrayList;
+import java.util.List;
+
 @Entity
-@Table(name = "Book")
+@Table(name = "book")
 public class Book {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "book_id")
+    @Column(name = "BOOK_ID")
     private Long id;
 
-    private String title;
-    private String author;
-    private String isbn;
+    @Column(name = "GENRE_ID")
     private String genre;
+
+    @Column(name = "TITLE")
+    private String title;
+
+    @Column(name = "AUTHOR")
+    private String author;
+
+    @Column(name = "ISBN")
+    private String isbn;
+
+    @Column(name = "PUBLISHER")
     private String publisher;
 
-    @Column(name = "published_year")
-    private Integer publicationYear;
+    @Column(name = "PUBLISH_YEAR")
+    private Integer publishYear;
 
-    @Column(name = "availability_status")
-    private String availabilityStatus;
+    @Column(name = "ACTIVE_FLAG")
+    @Convert(converter = BooleanConverter.class)
+    private boolean activeFlag;
+
+    @OneToMany(mappedBy = "book", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<BookLicense> licenses = new ArrayList<>();
 
     public Book() {
     }
 
-    public Book(Long id, String title, String author, String isbn, String genre, String publisher, Integer publicationYear, String availabilityStatus) {
+    public Book(Long id, String genre, String title, String author, String isbn, String publisher, Integer publishYear, boolean activeFlag) {
         this.id = id;
+        this.genre = genre;
         this.title = title;
         this.author = author;
         this.isbn = isbn;
-        this.genre = genre;
         this.publisher = publisher;
-        this.publicationYear = publicationYear;
-        this.availabilityStatus = availabilityStatus;
+        this.publishYear = publishYear;
+        this.activeFlag = activeFlag;
     }
 
     public Long getId() {
@@ -43,6 +60,14 @@ public class Book {
 
     public void setId(Long id) {
         this.id = id;
+    }
+
+    public String getGenre() {
+        return genre;
+    }
+
+    public void setGenre(String genre) {
+        this.genre = genre;
     }
 
     public String getTitle() {
@@ -69,14 +94,6 @@ public class Book {
         this.isbn = isbn;
     }
 
-    public String getGenre() {
-        return genre;
-    }
-
-    public void setGenre(String genre) {
-        this.genre = genre;
-    }
-
     public String getPublisher() {
         return publisher;
     }
@@ -85,20 +102,38 @@ public class Book {
         this.publisher = publisher;
     }
 
-    public Integer getPublicationYear() {
-        return publicationYear;
+    public Integer getPublishYear() {
+        return publishYear;
     }
 
-    public void setPublicationYear(Integer publicationYear) {
-        this.publicationYear = publicationYear;
+    public void setPublishYear(Integer publishYear) {
+        this.publishYear = publishYear;
     }
 
-    public String getAvailabilityStatus() {
-        return availabilityStatus;
+    public boolean isActiveFlag() {
+        return activeFlag;
     }
 
-    public void setAvailabilityStatus(String availabilityStatus) {
-        this.availabilityStatus = availabilityStatus;
+    public void setActiveFlag(boolean activeFlag) {
+        this.activeFlag = activeFlag;
+    }
+
+    public List<BookLicense> getLicenses() {
+        return licenses;
+    }
+
+    public void setLicenses(List<BookLicense> licenses) {
+        this.licenses = licenses;
+    }
+
+    public void addLicense(BookLicense license) {
+        licenses.add(license);
+        license.setBook(this);
+    }
+
+    public void removeLicense(BookLicense license) {
+        licenses.remove(license);
+        license.setBook(null);
     }
 }
 

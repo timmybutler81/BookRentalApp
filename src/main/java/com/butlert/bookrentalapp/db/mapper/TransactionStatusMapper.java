@@ -1,9 +1,7 @@
 package com.butlert.bookrentalapp.db.mapper;
 
 import com.butlert.bookrentalapp.db.entity.TransactionStatus;
-import com.butlert.bookrentalapp.db.entity.TransactionType;
 import com.butlert.bookrentalapp.dto.TransactionStatusDTO;
-import com.butlert.bookrentalapp.dto.TransactionTypeDTO;
 
 public class TransactionStatusMapper {
 

@@ -4,27 +4,27 @@ import com.butlert.bookrentalapp.utils.BooleanConverter;
 import jakarta.persistence.*;
 
 @Entity
-@Table(name = "transaction_status")
-public class TransactionStatus {
+@Table(name = "book_status")
+public class BookStatus {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "TRANSACTION_STATUS_ID")
+    @Column(name = "BOOK_STATUS_ID")
     private Long id;
 
-    @Column(name = "TRANSACTION_STATUS_NAME")
-    private String transactionStatusName;
+    @Column(name = "BOOK_STATUS_NAME")
+    private String bookStatusName;
 
     @Column(name = "ACTIVE_FLAG")
     @Convert(converter = BooleanConverter.class)
     private boolean activeFlag;
 
-    public TransactionStatus() {
+    public BookStatus() {
     }
 
-    public TransactionStatus(Long id, String transactionStatusName, boolean activeFlag) {
+    public BookStatus(Long id, String bookStatusName, boolean activeFlag) {
         this.id = id;
-        this.transactionStatusName = transactionStatusName;
+        this.bookStatusName = bookStatusName;
         this.activeFlag = activeFlag;
     }
 
@@ -36,12 +36,12 @@ public class TransactionStatus {
         this.id = id;
     }
 
-    public String getTransactionStatusName() {
-        return transactionStatusName;
+    public String getBookStatusName() {
+        return bookStatusName;
     }
 
-    public void setTransactionStatusName(String transactionStatus) {
-        this.transactionStatusName = transactionStatus;
+    public void setBookStatusName(String bookStatusName) {
+        this.bookStatusName = bookStatusName;
     }
 
     public boolean isActiveFlag() {

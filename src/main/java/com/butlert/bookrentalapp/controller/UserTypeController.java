@@ -20,7 +20,7 @@ public class UserTypeController {
     }
 
     @GetMapping("/{id}")
-    public UserTypeDTO getUserTypeById(Long id) {
+    public UserTypeDTO getUserTypeById(@PathVariable Long id) {
         return userTypeService.getUserTypeById(id);
     }
 

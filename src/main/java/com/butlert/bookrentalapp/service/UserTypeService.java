@@ -4,6 +4,7 @@ import com.butlert.bookrentalapp.dao.UserTypeDAO;
 import com.butlert.bookrentalapp.db.entity.UserType;
 import com.butlert.bookrentalapp.db.mapper.UserTypeMapper;
 import com.butlert.bookrentalapp.dto.UserTypeDTO;
+import com.butlert.bookrentalapp.validator.ValidatorImp;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -11,6 +12,9 @@ import java.util.List;
 
 @Service
 public class UserTypeService {
+
+    @Autowired
+    private ValidatorImp validatorImp;
 
     @Autowired
     private UserTypeDAO userTypeDAO;
@@ -24,6 +28,7 @@ public class UserTypeService {
     }
 
     public UserTypeDTO saveUserType(UserTypeDTO userTypeDTO) {
+        validatorImp.validate(userTypeDTO);
         UserType userType = UserTypeMapper.toEntity(userTypeDTO);
         return userTypeDAO.saveUserType(userType);
     }
