@@ -4,6 +4,7 @@ import com.butlert.bookrentalapp.dao.BookLicenseDAO;
 import com.butlert.bookrentalapp.db.entity.BookLicense;
 import com.butlert.bookrentalapp.db.entity.BookStatus;
 import com.butlert.bookrentalapp.db.mapper.BookLicenseMapper;
+import com.butlert.bookrentalapp.db.mapper.BookStatusMapper;
 import com.butlert.bookrentalapp.db.repository.BookLicenseRepository;
 import com.butlert.bookrentalapp.db.repository.BookStatusRepository;
 import com.butlert.bookrentalapp.dto.BookLicenseDTO;
@@ -23,8 +24,8 @@ public class BookLicenseDAOImp implements BookLicenseDAO {
     private BookStatusRepository bookStatusRepository;
 
     @Override
-    public BookLicenseDTO saveBookLicense(BookLicense bookLicense) {
-        BookLicense savedLicense = bookLicenseRepository.save(bookLicense);
+    public BookLicenseDTO saveBookLicense(BookLicenseDTO bookLicenseDTO) {
+        BookLicense savedLicense = bookLicenseRepository.save(BookLicenseMapper.toEntity(bookLicenseDTO));
         return BookLicenseMapper.toDTO(savedLicense);
     }
 
@@ -36,9 +37,10 @@ public class BookLicenseDAOImp implements BookLicenseDAO {
                 .collect(Collectors.toList());
     }
 
-    public BookLicense findLicenseById(Long bookLicenseId) {
-        return bookLicenseRepository.findById(bookLicenseId)
-                .orElseThrow(() -> new RuntimeException("Book License not found for ID: " + bookLicenseId));
+    public BookLicenseDTO findLicenseById(Long id) {
+        BookLicense bookLicense = bookLicenseRepository.findById(id)
+                .orElseThrow(() -> new RuntimeException("Book Status not found"));
+        return BookLicenseMapper.toDTO(bookLicense);
     }
 
     @Override
@@ -57,8 +59,15 @@ public class BookLicenseDAOImp implements BookLicenseDAO {
     }
 
     @Override
-    public BookLicense findAvailableLicenseByBookId(Long bookId) {
-        return bookLicenseRepository.findByBookIdAndBookStatusBookStatusName(bookId, "Available")
-                .orElseThrow(() -> new RuntimeException("No available licenses for book ID: " + bookId));
+    public void updateLicenseAvailability(Long bookLicenseId, boolean available) {
+        BookLicense bookLicense = bookLicenseRepository.findById(bookLicenseId)
+                .orElseThrow(() -> new RuntimeException("Book License not found"));
+        bookLicense.setAvailable(available);
+        bookLicenseRepository.save(bookLicense);
+    }
+
+    @Override
+    public boolean findAvailabilityByBookId(Long bookId) {
+        return bookLicenseRepository.findAvailabilityByBookId(bookId);
     }
 }

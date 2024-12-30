@@ -9,6 +9,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Repository
@@ -36,5 +37,12 @@ public class TransactionTypeDAOImp implements TransactionTypeDAO {
     public TransactionTypeDTO saveTransactionType(TransactionType transactionType) {
         TransactionType savedTransactionType = transactionTypeRepository.save(transactionType);
         return TransactionTypeMapper.toDTO(savedTransactionType);
+    }
+
+    @Override
+    public TransactionTypeDTO findByTransactionTypeName(String transactionTypeName) {
+        TransactionType transactionType = transactionTypeRepository.findByTransactionTypeName(transactionTypeName)
+                .orElseThrow(() -> new RuntimeException("Transaction Type not found: " + transactionTypeName));
+        return TransactionTypeMapper.toDTO(transactionType);
     }
 }

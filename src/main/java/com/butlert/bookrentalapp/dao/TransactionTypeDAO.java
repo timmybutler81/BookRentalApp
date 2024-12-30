@@ -4,6 +4,7 @@ import com.butlert.bookrentalapp.db.entity.TransactionType;
 import com.butlert.bookrentalapp.dto.TransactionTypeDTO;
 
 import java.util.List;
+import java.util.Optional;
 
 public interface TransactionTypeDAO {
 
@@ -12,4 +13,6 @@ public interface TransactionTypeDAO {
     TransactionTypeDTO findTransactionTypeById(Long id);
 
     TransactionTypeDTO saveTransactionType(TransactionType transactionType);
+
+    TransactionTypeDTO findByTransactionTypeName(String transactionTypeName);
 }

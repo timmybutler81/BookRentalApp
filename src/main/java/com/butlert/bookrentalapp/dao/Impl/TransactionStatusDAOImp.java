@@ -29,12 +29,19 @@ public class TransactionStatusDAOImp implements TransactionStatusDAO {
     public TransactionStatusDTO findTransactionStatusById(Long id) {
         return transactionStatusRepository.findById(id)
                 .map(TransactionStatusMapper::toDTO)
-                .orElseThrow(() -> new RuntimeException("Transaction Type not found"));
+                .orElseThrow(() -> new RuntimeException("Transaction Status not found"));
     }
 
     @Override
     public TransactionStatusDTO saveTransactionStatus(TransactionStatus transactionStatus) {
         TransactionStatus savedTransactionStatus = transactionStatusRepository.save(transactionStatus);
         return TransactionStatusMapper.toDTO(savedTransactionStatus);
+    }
+
+    @Override
+    public TransactionStatusDTO findByTransactionStatusName(String transactionName) {
+        return transactionStatusRepository.findByTransactionStatusName(transactionName)
+                .map(TransactionStatusMapper::toDTO)
+                .orElseThrow(() -> new RuntimeException("Transaction Status not found"));
     }
 }

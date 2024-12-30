@@ -10,6 +10,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Optional;
 
 @Service
 public class BookService {
@@ -20,14 +21,11 @@ public class BookService {
     @Autowired
     private BookDAO bookDAO;
 
-    @Autowired
-    private BookRepository bookRepository;
-
     public List<BookDTO> findAllBooks() {
         return bookDAO.findAllBooks();
     }
 
-    public BookDTO getBookById(Long id) {
+    public Optional<BookDTO> getBookById(Long id) {
         return bookDAO.findBookById(id);
     }
 

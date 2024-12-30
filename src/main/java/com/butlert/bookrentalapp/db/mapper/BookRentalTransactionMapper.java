@@ -1,6 +1,6 @@
 package com.butlert.bookrentalapp.db.mapper;
 
-import com.butlert.bookrentalapp.db.entity.BookRentalTransaction;
+import com.butlert.bookrentalapp.db.entity.*;
 import com.butlert.bookrentalapp.dto.BookRentalTransactionDTO;
 
 public class BookRentalTransactionMapper {
@@ -20,6 +20,13 @@ public class BookRentalTransactionMapper {
 
     public static BookRentalTransaction toEntity(BookRentalTransactionDTO dto) {
         BookRentalTransaction transaction = new BookRentalTransaction();
+        transaction.setId(dto.getId());
+        User user = new User();
+        user.setId(dto.getUserId());
+        transaction.setUser(user);
+        BookLicense bookLicense = new BookLicense();
+        bookLicense.setId(dto.getBookLicenseId());
+        transaction.setBookLicense(bookLicense);
         transaction.setTransactionDate(dto.getTransactionDate());
         transaction.setDueDate(dto.getDueDate());
         transaction.setDateReturned(dto.getDateReturned());

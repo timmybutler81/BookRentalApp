@@ -4,6 +4,7 @@ import com.butlert.bookrentalapp.db.entity.User;
 import com.butlert.bookrentalapp.dto.UserDTO;
 
 import java.util.List;
+import java.util.Optional;
 
 public interface UserDAO {
 

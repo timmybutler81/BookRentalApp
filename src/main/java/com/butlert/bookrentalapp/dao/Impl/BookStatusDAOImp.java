@@ -26,10 +26,9 @@ public class BookStatusDAOImp implements BookStatusDAO {
 
     @Override
     public BookStatusDTO findBookStatusById(Long id) {
-        System.out.println("Received ID: " + id);
-        return bookStatusRepository.findById(id)
-                .map(BookStatusMapper::toDTO)
+        BookStatus bookStatus = bookStatusRepository.findById(id)
                 .orElseThrow(() -> new RuntimeException("Book Status not found"));
+        return BookStatusMapper.toDTO(bookStatus);
     }
 
     @Override

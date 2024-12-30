@@ -1,16 +1,7 @@
 package com.butlert.bookrentalapp.service;
 
-import com.butlert.bookrentalapp.dao.BookRentalTransactionDAO;
-import com.butlert.bookrentalapp.db.entity.BookLicense;
-import com.butlert.bookrentalapp.db.entity.BookRentalTransaction;
-import com.butlert.bookrentalapp.db.entity.TransactionType;
-import com.butlert.bookrentalapp.db.entity.User;
-import com.butlert.bookrentalapp.db.mapper.BookRentalTransactionMapper;
-import com.butlert.bookrentalapp.db.repository.BookLicenseRepository;
-import com.butlert.bookrentalapp.db.repository.TransactionStatusRepository;
-import com.butlert.bookrentalapp.db.repository.TransactionTypeRepository;
-import com.butlert.bookrentalapp.db.repository.UserRepository;
-import com.butlert.bookrentalapp.dto.BookRentalTransactionDTO;
+import com.butlert.bookrentalapp.dao.*;
+import com.butlert.bookrentalapp.dto.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -20,70 +11,84 @@ import java.time.LocalDate;
 public class BookRentalTransactionService {
 
     @Autowired
-    private BookRentalTransactionDAO transactionDAO;
+    private BookRentalTransactionDAO bookRentalTransactionDAO;
 
     @Autowired
-    private BookLicenseRepository bookLicenseRepository;
+    private BookLicenseDAO bookLicenseDAO;
 
     @Autowired
-    private TransactionTypeRepository transactionTypeRepository;
+    private TransactionTypeDAO transactionTypeDAO;
 
     @Autowired
-    private UserRepository userRepository;
+    private UserDAO userDAO;
 
     @Autowired
-    private TransactionStatusRepository transactionStatusRepository;
+    private TransactionStatusDAO transactionStatusDAO;
 
     public BookRentalTransactionDTO checkOutBook(Long bookLicenseId, Long userId) {
-        BookLicense bookLicense = bookLicenseRepository.findById(bookLicenseId)
-                .orElseThrow(() -> new RuntimeException("Book License not found"));
-        //check availability
-        if (!bookLicense.isAvailable()) {
+        // Resolve the BookLicense
+        BookLicenseDTO bookLicenseDTO = bookLicenseDAO.findLicenseById(bookLicenseId);
+        if (!bookLicenseDTO.isAvailable()) {
             throw new RuntimeException("Book License is not available for checkout");
         }
 
-        TransactionType transactionType = transactionTypeRepository.findByTransactionTypeName("Check Out")
-                .orElseThrow(() -> new RuntimeException("Transaction Type not found"));
-        //finding user
-        User user = userRepository.findById(userId)
-                .orElseThrow(() -> new RuntimeException("User not found"));
+        // Resolve the TransactionType
+        TransactionTypeDTO transactionTypeDTO = transactionTypeDAO.findByTransactionTypeName("Check Out");
 
-        bookLicense.setAvailable(false);
-        bookLicenseRepository.save(bookLicense);
-        //transaction creationg
-        BookRentalTransaction transaction = new BookRentalTransaction();
-        transaction.setBookLicense(bookLicense);
-        transaction.setUser(user);
-        transaction.setTransactionType(transactionType);
-        transaction.setTransactionStatus(transactionStatusRepository.findByTransactionStatusName("Success").orElseThrow());
-        transaction.setTransactionDate(LocalDate.now());
+        // Resolve the User
+        UserDTO userDTO = userDAO.findUserById(userId);
 
-        transaction.setDueDate(LocalDate.now().plusDays(user.getUserType().getRentalDurationDays()));
+        // Resolve the TransactionStatus DTO
+        TransactionStatusDTO transactionStatusDTO = transactionStatusDAO.findByTransactionStatusName("Success");
 
-        return BookRentalTransactionMapper.toDTO(transactionDAO.saveTransaction(transaction));
+        // Update BookLicense availability
+        bookLicenseDTO.setAvailable(false);
+        bookLicenseDAO.updateLicenseAvailability(bookLicenseId, false); // Ensure this method exists and updates availability in DB
+
+        // Create the Transaction
+        BookRentalTransactionDTO bookRentalTransactionDTO = new BookRentalTransactionDTO();
+        bookRentalTransactionDTO.setBookLicenseId(bookLicenseId);
+        bookRentalTransactionDTO.setUserId(userDTO.getId());
+        bookRentalTransactionDTO.setTransactionType(transactionTypeDTO.getTransactionTypeName());
+        bookRentalTransactionDTO.setTransactionStatus(transactionStatusDTO.getTransactionStatusName());
+        bookRentalTransactionDTO.setTransactionDate(LocalDate.now());
+        bookRentalTransactionDTO.setDueDate(LocalDate.now().plusDays(userDTO.getUserType().getRentalDurationDays()));
+
+        // Save and return DTO
+        return bookRentalTransactionDAO.saveTransaction(bookRentalTransactionDTO);
     }
 
     public BookRentalTransactionDTO returnBook(Long bookLicenseId, Long userId) {
-        BookLicense bookLicense = bookLicenseRepository.findById(bookLicenseId)
-                .orElseThrow(() -> new RuntimeException("Book License not found"));
+        // Resolve the BookLicense DTO
+        BookLicenseDTO bookLicenseDTO = bookLicenseDAO.findLicenseById(bookLicenseId);
 
-        TransactionType transactionType = transactionTypeRepository.findByTransactionTypeName("Return")
-                .orElseThrow(() -> new RuntimeException("Transaction Type not found"));
-        //finding user
-        User user = userRepository.findById(userId)
-                .orElseThrow(() -> new RuntimeException("User not found"));
+        // Resolve the TransactionType DTO
+        TransactionTypeDTO transactionTypeDTO = transactionTypeDAO.findByTransactionTypeName("Returned");
 
-        bookLicense.setAvailable(true);
-        bookLicenseRepository.save(bookLicense);
-        //creating the transaction
-        BookRentalTransaction transaction = new BookRentalTransaction();
-        transaction.setBookLicense(bookLicense);
-        transaction.setUser(user);
-        transaction.setTransactionType(transactionType);
-        transaction.setTransactionStatus(transactionStatusRepository.findByTransactionStatusName("Success").orElseThrow());
-        transaction.setTransactionDate(LocalDate.now());
-        transaction.setDateReturned(LocalDate.now());
+        // Resolve the TransactionStatus DTO
+        TransactionStatusDTO transactionStatusDTO = transactionStatusDAO.findByTransactionStatusName("Success");
 
-        return BookRentalTransactionMapper.toDTO(transactionDAO.saveTransaction(transaction));
+        // Resolve the User DTO
+        UserDTO userDTO = userDAO.findUserById(userId);
+
+        // Update BookLicense availability through the DAO
+        bookLicenseDTO.setAvailable(true);
+        bookLicenseDAO.updateLicenseAvailability(bookLicenseId, true);
+
+        // Create the Transaction DTO
+        BookRentalTransactionDTO bookRentalTransactionDTO = new BookRentalTransactionDTO();
+        bookRentalTransactionDTO.setBookLicenseId(bookLicenseDTO.getId());
+        bookRentalTransactionDTO.setUserId(userDTO.getId());
+        bookRentalTransactionDTO.setTransactionType(transactionTypeDTO.getTransactionTypeName());
+        bookRentalTransactionDTO.setTransactionStatus(transactionStatusDTO.getTransactionStatusName());
+        bookRentalTransactionDTO.setTransactionDate(LocalDate.now());
+        bookRentalTransactionDTO.setDateReturned(LocalDate.now());
+
+        // Save and return the DTO using the DAO
+        return bookRentalTransactionDAO.saveTransaction(bookRentalTransactionDTO);
+    }
+
+    public void createTransaction() {
+
     }
 }

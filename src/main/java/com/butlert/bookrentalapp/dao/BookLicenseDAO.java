@@ -6,13 +6,15 @@ import com.butlert.bookrentalapp.dto.BookLicenseDTO;
 import java.util.List;
 
 public interface BookLicenseDAO {
-    BookLicenseDTO saveBookLicense(BookLicense bookLicense);
+    BookLicenseDTO saveBookLicense(BookLicenseDTO bookLicenseDTO);
 
     List<BookLicenseDTO> findLicensesByBookId(Long bookId);
 
     BookLicenseDTO updateLicenseStatus(Long licenseId, Long statusId);
 
-    BookLicense findLicenseById(Long bookLicenseId);
+    BookLicenseDTO findLicenseById(Long bookLicenseId);
 
-    BookLicense findAvailableLicenseByBookId(Long bookId);
+    boolean findAvailabilityByBookId(Long bookId);
+
+    void updateLicenseAvailability(Long bookLicenseId, boolean available);
 }

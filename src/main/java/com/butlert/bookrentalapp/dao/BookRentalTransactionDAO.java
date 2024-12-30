@@ -1,7 +1,7 @@
 package com.butlert.bookrentalapp.dao;
 
-import com.butlert.bookrentalapp.db.entity.BookRentalTransaction;
+import com.butlert.bookrentalapp.dto.BookRentalTransactionDTO;
 
 public interface BookRentalTransactionDAO {
-    BookRentalTransaction saveTransaction(BookRentalTransaction transaction);
+    BookRentalTransactionDTO saveTransaction(BookRentalTransactionDTO transactionDTO);
 }

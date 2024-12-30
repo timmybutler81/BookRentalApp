@@ -2,7 +2,9 @@ package com.butlert.bookrentalapp.dao.Impl;
 
 import com.butlert.bookrentalapp.dao.BookRentalTransactionDAO;
 import com.butlert.bookrentalapp.db.entity.BookRentalTransaction;
+import com.butlert.bookrentalapp.db.mapper.BookRentalTransactionMapper;
 import com.butlert.bookrentalapp.db.repository.BookRentalTransactionRepository;
+import com.butlert.bookrentalapp.dto.BookRentalTransactionDTO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 
@@ -10,10 +12,12 @@ import org.springframework.stereotype.Repository;
 public class BookRentalTransactionDAOImp implements BookRentalTransactionDAO {
 
     @Autowired
-    private BookRentalTransactionRepository repository;
+    private BookRentalTransactionRepository bookRentalTransactionRepository;
 
     @Override
-    public BookRentalTransaction saveTransaction(BookRentalTransaction transaction) {
-        return repository.save(transaction);
+    public BookRentalTransactionDTO saveTransaction(BookRentalTransactionDTO transactionDTO) {
+        BookRentalTransaction transaction = BookRentalTransactionMapper.toEntity(transactionDTO);
+        BookRentalTransaction savedTransaction = bookRentalTransactionRepository.save(transaction);
+        return BookRentalTransactionMapper.toDTO(savedTransaction);
     }
 }

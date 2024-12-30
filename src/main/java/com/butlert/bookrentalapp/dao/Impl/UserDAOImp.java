@@ -24,7 +24,7 @@ public class UserDAOImp implements UserDAO {
 
     @Override
     public UserDTO findUserById(Long id) {
-        return userRepository.findById(id).map(UserMapper::toDTO).orElseThrow(() -> new RuntimeException("Genre Not Found"));
+        return userRepository.findById(id).map(UserMapper::toDTO).orElseThrow(() -> new RuntimeException("User Not Found"));
     }
 
     @Override

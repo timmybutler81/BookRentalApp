@@ -9,6 +9,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Repository
@@ -26,10 +27,10 @@ public class BookDAOImp implements BookDAO {
     }
 
     @Override
-    public BookDTO findBookById(Long id) {
-        return bookRepository.findById(id)
+    public Optional<BookDTO> findBookById(Long id) {
+        return Optional.ofNullable(bookRepository.findById(id)
                 .map(BookMapper::toDTO)
-                .orElseThrow(() -> new RuntimeException("Book not found"));
+                .orElseThrow(() -> new RuntimeException("Book not found")));
     }
 
     @Override

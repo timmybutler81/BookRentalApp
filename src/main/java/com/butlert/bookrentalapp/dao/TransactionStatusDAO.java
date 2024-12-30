@@ -12,4 +12,6 @@ public interface TransactionStatusDAO {
     TransactionStatusDTO findTransactionStatusById(Long id);
 
     TransactionStatusDTO saveTransactionStatus(TransactionStatus transactionStatus);
+
+    TransactionStatusDTO findByTransactionStatusName(String transactionName);
 }
