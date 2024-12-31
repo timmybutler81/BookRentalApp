@@ -39,7 +39,10 @@ public class UserTypeDAOImpl implements UserTypeDAO {
                 .collect(Collectors.toList());
     }
 
-
+    @Override
+    public int findCheckoutDurationByUserType(Long id) {
+        return userTypeRepository.findCheckoutDurationByUserTypeId(id);
+    }
 
 
 }

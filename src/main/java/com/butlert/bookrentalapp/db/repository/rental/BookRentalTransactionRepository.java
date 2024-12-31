@@ -18,4 +18,11 @@ public interface BookRentalTransactionRepository extends JpaRepository<BookRenta
 
     @Query(value = "SELECT * FROM book_rental_transaction WHERE user_id = :userId", nativeQuery = true)
     List<BookRentalTransaction> findTransactionsByUserId(@Param("userId") Long userId);
+
+    @Query(value = "SELECT a.*\n" +
+            "FROM book_rental_transaction a\n" +
+            "INNER JOIN book_license b ON a.book_license_id = b.book_license_id\n" +
+            "WHERE b.book_id = :bookId\n" +
+            "  AND a.date_returned IS NULL;", nativeQuery = true)
+    List<BookRentalTransaction> findTransactionsByBookId(@Param("bookId") Long bookId);
 }

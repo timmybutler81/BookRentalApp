@@ -18,4 +18,6 @@ public interface BookRentalTransactionDAO {
     BookRentalTransactionDTO findTransactionByLicenseAndUser(Long licenseId, Long userId);
 
     List<BookRentalTransactionDTO> findTransactionsByUserId (Long userId);
+
+    List<BookRentalTransactionDTO> findTransactionsByBookId(Long bookId);
 }

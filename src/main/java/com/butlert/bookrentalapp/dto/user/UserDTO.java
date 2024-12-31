@@ -7,7 +7,7 @@ import java.time.LocalDate;
 public class UserDTO {
 
     private Long id;
-    private UserType userType;
+    private Long userTypeId;
     private String firstName;
     private String lastName;
     private String emailAddress;
@@ -18,9 +18,9 @@ public class UserDTO {
     public UserDTO() {
     }
 
-    public UserDTO(Long id, UserType userType, String firstName, String lastName, String emailAddress, String phoneNumber, LocalDate registrationDate, boolean activeFlag) {
+    public UserDTO(Long id, Long userTypeId, String firstName, String lastName, String emailAddress, String phoneNumber, LocalDate registrationDate, boolean activeFlag) {
         this.id = id;
-        this.userType = userType;
+        this.userTypeId = userTypeId;
         this.firstName = firstName;
         this.lastName = lastName;
         this.emailAddress = emailAddress;
@@ -37,12 +37,12 @@ public class UserDTO {
         this.id = id;
     }
 
-    public UserType getUserType() {
-        return userType;
+    public Long getUserTypeId() {
+        return userTypeId;
     }
 
-    public void setUserType(UserType userType) {
-        this.userType = userType;
+    public void setUserTypeId(Long userTypeId) {
+        this.userTypeId = userTypeId;
     }
 
     public String getFirstName() {

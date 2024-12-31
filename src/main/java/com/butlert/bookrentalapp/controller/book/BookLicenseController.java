@@ -30,7 +30,7 @@ public class BookLicenseController {
         return ResponseEntity.ok(bookLicenseService.getAllBookLicenses());
     }
 
-    @GetMapping("/{bookId}")
+    @GetMapping("/book/{bookId}")
     public ResponseEntity<List<BookLicenseDTO>> getLicensesForBook(@PathVariable Long bookId) {
         return ResponseEntity.ok(bookLicenseService.getLicensesForBook(bookId));
     }

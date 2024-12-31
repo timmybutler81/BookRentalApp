@@ -14,9 +14,8 @@ public class User {
     @Column(name = "USER_ID")
     private Long id;
 
-    @ManyToOne
     @JoinColumn(name = "USER_TYPE_ID", referencedColumnName = "USER_TYPE_ID", nullable = false)
-    private UserType userType;
+    private Long userTypeId;
 
     @Column(name = "FIRST_NAME")
     private String firstName;
@@ -40,9 +39,9 @@ public class User {
     public User() {
     }
 
-    public User(Long id, UserType userType, String firstName, String lastName, String emailAddress, String phoneNumber, LocalDate registrationDate, boolean activeFlag) {
+    public User(Long id, Long userTypeId, String firstName, String lastName, String emailAddress, String phoneNumber, LocalDate registrationDate, boolean activeFlag) {
         this.id = id;
-        this.userType = userType;
+        this.userTypeId = userTypeId;
         this.firstName = firstName;
         this.lastName = lastName;
         this.emailAddress = emailAddress;
@@ -59,12 +58,12 @@ public class User {
         this.id = id;
     }
 
-    public UserType getUserType() {
-        return userType;
+    public Long getUserTypeId() {
+        return userTypeId;
     }
 
-    public void setUserType(UserType userType) {
-        this.userType = userType;
+    public void setUserTypeId(Long userTypeId) {
+        this.userTypeId = userTypeId;
     }
 
     public String getFirstName() {

@@ -7,21 +7,17 @@ import com.butlert.bookrentalapp.dao.user.UserDAO;
 import com.butlert.bookrentalapp.dao.WaitlistDAO;
 import com.butlert.bookrentalapp.db.entity.Waitlist;
 import com.butlert.bookrentalapp.db.mapper.WaitlistMapper;
-import com.butlert.bookrentalapp.db.repository.WaitlistRepository;
 import com.butlert.bookrentalapp.dto.WaitlistUserDTO;
 import com.butlert.bookrentalapp.dto.book.BookDTO;
-import com.butlert.bookrentalapp.dto.book.BookLicenseDTO;
-import com.butlert.bookrentalapp.dto.rental.BookRentalTransactionDTO;
+import com.butlert.bookrentalapp.dto.book.BookDetailsWithWaitTimeDTO;
 import com.butlert.bookrentalapp.dto.user.UserDTO;
 import com.butlert.bookrentalapp.dto.WaitlistDTO;
-import com.butlert.bookrentalapp.service.rental.BookRentalTransactionService;
 import com.butlert.bookrentalapp.validator.ValidatorImp;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
 import java.util.List;
-import java.util.Optional;
 
 @Service
 public class WaitlistService {
@@ -39,9 +35,6 @@ public class WaitlistService {
     private WaitlistDAO waitlistDAO;
 
     @Autowired
-    private BookRentalTransactionService bookRentalTransactionService;
-
-    @Autowired
     private WaitlistUserDAO waitlistUserDAO;
 
     @Autowired
@@ -56,7 +49,6 @@ public class WaitlistService {
         if (!bookLicenseDAO.findAvailabilityByBookId(bookId)) {
             throw new IllegalArgumentException("Book has availability, not adding to waitlist");
         }
-        //check user is not on waitlist
 
         Waitlist waitlist = new Waitlist();
         waitlist.setUserId(userId);
@@ -83,30 +75,29 @@ public class WaitlistService {
         waitlist.setProcessedFlag(true);
     }
 
-    public BookRentalTransactionDTO checkOutBookFromWaitList(Long bookId, Long userId) {
-        Optional<BookLicenseDTO> bookLicenseDTO = bookLicenseDAO.findAvailableLicenseByBookId(bookId);
-        BookDTO bookDTO = bookDAO.findBookById(bookId);
-        validator.validate(bookDTO);
-        UserDTO userDTO = userDAO.findUserById(userId);
-        validator.validate(userDTO);
-
-        if (bookLicenseDTO.isPresent()) {
-            BookRentalTransactionDTO bookRentalTransactionDTO = bookRentalTransactionService.checkoutBook(bookLicenseDTO.get().getId(), userId);
-            removeUserFromWaitlist(bookId, userId);
-            return bookRentalTransactionDTO;
-        } else {
-            throw new IllegalArgumentException("No available Licenses to check out");
-        }
-    }
-
     public List<WaitlistUserDTO> getWaitlistByUser(Long userId) {
         UserDTO userDTO = userDAO.findUserById(userId);
         validator.validate(userDTO);
         return waitlistUserDAO.findWaitlistsByUserId(userId);
     }
 
-    public void getWaitlistByBookId(Long bookId) {
+    public UserDTO getNextUserOnWaitlistByBookId(Long bookId) {
+        return waitlistUserDAO.findNextUserOnWaitlistByBookId(bookId);
+    }
 
+    public List<WaitlistDTO> getWaitlistByBookId(Long bookId) {
+        return waitlistDAO.findWaitlistByBookId(bookId);
+    }
+
+    public BookDetailsWithWaitTimeDTO getBookDetailsWithWaitTime(Long bookId, Long userId) {
+        // Get book details
+        BookDTO book = bookDAO.findBookById(bookId);
+
+        // Calculate wait days
+        int estimatedWaitDays = waitlistUserDAO.calculateEstimatedWaitDays(bookId, userId);
+
+        // Return details with wait time
+        return new BookDetailsWithWaitTimeDTO(book, estimatedWaitDays);
     }
 
 }

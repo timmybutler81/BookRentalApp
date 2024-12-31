@@ -60,4 +60,12 @@ public class BookRentalTransactionDAOImp implements BookRentalTransactionDAO {
                 .map(BookRentalTransactionMapper::toDTO)
                 .collect(Collectors.toList());
     }
+
+    @Override
+    public List<BookRentalTransactionDTO> findTransactionsByBookId(Long bookId) {
+        return bookRentalTransactionRepository.findTransactionsByBookId(bookId)
+                .stream()
+                .map(BookRentalTransactionMapper::toDTO)
+                .collect(Collectors.toList());
+    }
 }

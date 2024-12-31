@@ -1,6 +1,7 @@
 package com.butlert.bookrentalapp.controller.rental;
 
 import com.butlert.bookrentalapp.dto.rental.BookRentalTransactionDTO;
+import com.butlert.bookrentalapp.service.rental.BookRentalService;
 import com.butlert.bookrentalapp.service.rental.BookRentalTransactionService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -15,11 +16,14 @@ public class BookRentalTransactionController {
     @Autowired
     private BookRentalTransactionService bookRentalTransactionService;
 
+    @Autowired
+    private BookRentalService bookRentalService;
+
     @PostMapping("/checkout")
     public ResponseEntity<BookRentalTransactionDTO> checkOutBook(
                                                 @RequestParam Long bookLicenseId,
                                                 @RequestParam Long userId) {
-        BookRentalTransactionDTO bookRentalTransactionDTO = bookRentalTransactionService.checkoutBook(bookLicenseId, userId);
+        BookRentalTransactionDTO bookRentalTransactionDTO = bookRentalService.checkoutBook(bookLicenseId, userId);
         return ResponseEntity.ok(bookRentalTransactionDTO);
     }
 
@@ -27,7 +31,7 @@ public class BookRentalTransactionController {
     public ResponseEntity<BookRentalTransactionDTO> returnBook(
                                                 @RequestParam Long bookLicenseId,
                                                 @RequestParam Long userId) {
-        BookRentalTransactionDTO bookRentalTransactionDTO = bookRentalTransactionService.returnBook(bookLicenseId, userId);
+        BookRentalTransactionDTO bookRentalTransactionDTO = bookRentalService.returnBook(bookLicenseId, userId);
         return ResponseEntity.ok(bookRentalTransactionDTO);
     }
 
