@@ -72,7 +72,7 @@ public class WaitlistUserDAOImp implements WaitlistUserDAO {
     }
 
     @Override
-    public UserDTO findNextUserOnWaitlistByBookId (Long bookId) {
+    public UserDTO findNextUserOnWaitlistByBookId(Long bookId) {
         User user = userRepository.findById(waitlistRepository.nextUserOnWaitlistByBookId(bookId))
                 .orElseThrow(() -> new RuntimeException("User not found on waitlist"));
         return UserMapper.toDTO(user);

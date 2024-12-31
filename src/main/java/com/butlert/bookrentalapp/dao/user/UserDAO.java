@@ -1,6 +1,5 @@
 package com.butlert.bookrentalapp.dao.user;
 
-import com.butlert.bookrentalapp.db.entity.user.User;
 import com.butlert.bookrentalapp.dto.user.UserDTO;
 
 import java.util.List;

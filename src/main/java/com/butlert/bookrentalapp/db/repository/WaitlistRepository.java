@@ -12,7 +12,7 @@ import java.util.List;
 public interface WaitlistRepository extends JpaRepository<Waitlist, Long> {
 
     @Query(value = "SELECT EXISTS(SELECT 1 FROM waitlist WHERE processed_flag = 'N' AND user_id = :userId AND book_id = :bookId)", nativeQuery = true)
-    boolean existsWaitlistByUserIdAndBookId(@Param("userId") Long userId,@Param("bookId") Long bookId);
+    boolean existsWaitlistByUserIdAndBookId(@Param("userId") Long userId, @Param("bookId") Long bookId);
 
     List<Waitlist> findWaitlistsByUserId(Long userId);
 

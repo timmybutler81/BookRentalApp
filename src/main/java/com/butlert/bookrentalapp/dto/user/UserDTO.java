@@ -1,7 +1,5 @@
 package com.butlert.bookrentalapp.dto.user;
 
-import com.butlert.bookrentalapp.db.entity.user.UserType;
-
 import java.time.LocalDate;
 
 public class UserDTO {

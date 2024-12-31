@@ -1,8 +1,5 @@
 package com.butlert.bookrentalapp.db.mapper.rental;
 
-import com.butlert.bookrentalapp.dao.book.BookLicenseDAO;
-import com.butlert.bookrentalapp.dao.rental.TransactionStatusDAO;
-import com.butlert.bookrentalapp.dao.user.UserDAO;
 import com.butlert.bookrentalapp.db.entity.rental.BookRentalTransaction;
 import com.butlert.bookrentalapp.db.mapper.book.BookLicenseMapper;
 import com.butlert.bookrentalapp.db.mapper.user.UserMapper;

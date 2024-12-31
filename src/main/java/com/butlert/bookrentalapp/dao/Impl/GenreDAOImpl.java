@@ -6,7 +6,6 @@ import com.butlert.bookrentalapp.db.mapper.book.GenreMapper;
 import com.butlert.bookrentalapp.db.repository.book.GenreRepository;
 import com.butlert.bookrentalapp.dto.book.GenreDTO;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
@@ -39,8 +38,6 @@ public class GenreDAOImpl implements GenreDAO {
                 .map(GenreMapper::toDTO)
                 .collect(Collectors.toList());
     }
-
-
 
 
 }

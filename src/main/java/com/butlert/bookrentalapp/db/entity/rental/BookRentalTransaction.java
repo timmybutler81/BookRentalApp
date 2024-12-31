@@ -1,7 +1,7 @@
 package com.butlert.bookrentalapp.db.entity.rental;
 
-import com.butlert.bookrentalapp.db.entity.user.User;
 import com.butlert.bookrentalapp.db.entity.book.BookLicense;
+import com.butlert.bookrentalapp.db.entity.user.User;
 import jakarta.persistence.*;
 
 import java.time.LocalDate;

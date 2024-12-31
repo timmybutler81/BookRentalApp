@@ -1,17 +1,17 @@
 package com.butlert.bookrentalapp.service;
 
+import com.butlert.bookrentalapp.dao.WaitlistDAO;
 import com.butlert.bookrentalapp.dao.WaitlistUserDAO;
 import com.butlert.bookrentalapp.dao.book.BookDAO;
 import com.butlert.bookrentalapp.dao.book.BookLicenseDAO;
 import com.butlert.bookrentalapp.dao.user.UserDAO;
-import com.butlert.bookrentalapp.dao.WaitlistDAO;
 import com.butlert.bookrentalapp.db.entity.Waitlist;
 import com.butlert.bookrentalapp.db.mapper.WaitlistMapper;
+import com.butlert.bookrentalapp.dto.WaitlistDTO;
 import com.butlert.bookrentalapp.dto.WaitlistUserDTO;
 import com.butlert.bookrentalapp.dto.book.BookDTO;
 import com.butlert.bookrentalapp.dto.book.BookDetailsWithWaitTimeDTO;
 import com.butlert.bookrentalapp.dto.user.UserDTO;
-import com.butlert.bookrentalapp.dto.WaitlistDTO;
 import com.butlert.bookrentalapp.validator.ValidatorImp;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;

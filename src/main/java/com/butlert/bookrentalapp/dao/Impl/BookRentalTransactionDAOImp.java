@@ -67,14 +67,14 @@ public class BookRentalTransactionDAOImp implements BookRentalTransactionDAO {
     }
 
     @Override
-    public BookRentalTransactionDTO findTransactionByLicenseAndUser (Long licenseId, Long userId) {
+    public BookRentalTransactionDTO findTransactionByLicenseAndUser(Long licenseId, Long userId) {
         BookRentalTransaction bookRentalTransaction = bookRentalTransactionRepository.findTransactionByLicenseAndUser(licenseId, userId);
         System.out.println("in dao impl: " + bookRentalTransaction);
         return BookRentalTransactionMapper.toDTO(bookRentalTransaction);
     }
 
     @Override
-    public List<BookRentalTransactionDTO> findTransactionsByUserId (Long userId) {
+    public List<BookRentalTransactionDTO> findTransactionsByUserId(Long userId) {
         return bookRentalTransactionRepository.findTransactionsByUserId(userId)
                 .stream()
                 .map(BookRentalTransactionMapper::toDTO)

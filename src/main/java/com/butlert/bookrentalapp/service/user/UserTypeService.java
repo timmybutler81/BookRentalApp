@@ -1,8 +1,6 @@
 package com.butlert.bookrentalapp.service.user;
 
 import com.butlert.bookrentalapp.dao.user.UserTypeDAO;
-import com.butlert.bookrentalapp.db.entity.user.UserType;
-import com.butlert.bookrentalapp.db.mapper.user.UserTypeMapper;
 import com.butlert.bookrentalapp.dto.user.UserTypeDTO;
 import com.butlert.bookrentalapp.validator.ValidatorImp;
 import org.springframework.beans.factory.annotation.Autowired;

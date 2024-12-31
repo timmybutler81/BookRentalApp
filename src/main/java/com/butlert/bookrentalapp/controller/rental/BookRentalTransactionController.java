@@ -21,16 +21,16 @@ public class BookRentalTransactionController {
 
     @PostMapping("/checkout")
     public ResponseEntity<BookRentalTransactionDTO> checkOutBook(
-                                                @RequestParam Long bookLicenseId,
-                                                @RequestParam Long userId) {
+            @RequestParam Long bookLicenseId,
+            @RequestParam Long userId) {
         BookRentalTransactionDTO bookRentalTransactionDTO = bookRentalService.checkoutBook(bookLicenseId, userId);
         return ResponseEntity.ok(bookRentalTransactionDTO);
     }
 
     @PostMapping("/return")
     public ResponseEntity<BookRentalTransactionDTO> returnBook(
-                                                @RequestParam Long bookLicenseId,
-                                                @RequestParam Long userId) {
+            @RequestParam Long bookLicenseId,
+            @RequestParam Long userId) {
         System.out.println("Started the request");
         BookRentalTransactionDTO bookRentalTransactionDTO = bookRentalService.returnBook(bookLicenseId, userId);
         System.out.println("passing to book rental service");

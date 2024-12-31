@@ -1,8 +1,6 @@
 package com.butlert.bookrentalapp.service.book;
 
 import com.butlert.bookrentalapp.dao.book.GenreDAO;
-import com.butlert.bookrentalapp.db.entity.book.Genre;
-import com.butlert.bookrentalapp.db.mapper.book.GenreMapper;
 import com.butlert.bookrentalapp.dto.book.GenreDTO;
 import com.butlert.bookrentalapp.validator.ValidatorImp;
 import org.springframework.beans.factory.annotation.Autowired;

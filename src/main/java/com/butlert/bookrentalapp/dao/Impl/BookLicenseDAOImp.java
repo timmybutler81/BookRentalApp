@@ -4,7 +4,6 @@ import com.butlert.bookrentalapp.dao.book.BookLicenseDAO;
 import com.butlert.bookrentalapp.db.entity.book.BookLicense;
 import com.butlert.bookrentalapp.db.mapper.book.BookLicenseMapper;
 import com.butlert.bookrentalapp.db.repository.book.BookLicenseRepository;
-import com.butlert.bookrentalapp.db.repository.book.BookStatusRepository;
 import com.butlert.bookrentalapp.dto.book.BookLicenseDTO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
