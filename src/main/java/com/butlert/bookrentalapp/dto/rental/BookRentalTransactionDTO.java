@@ -6,7 +6,7 @@ public class BookRentalTransactionDTO {
     private Long id;
     private Long userId;
     private Long bookLicenseId;
-    private String transactionStatus;
+    private Long transactionStatusId;
     private LocalDate checkOutDate;
     private LocalDate dueDate;
     private LocalDate dateReturned;
@@ -14,11 +14,11 @@ public class BookRentalTransactionDTO {
     public BookRentalTransactionDTO() {
     }
 
-    public BookRentalTransactionDTO(Long id, Long userId, Long bookLicenseId, String transactionStatus, LocalDate checkOutDate, LocalDate dueDate, LocalDate dateReturned) {
+    public BookRentalTransactionDTO(Long id, Long userId, Long bookLicenseId, Long transactionStatusId, LocalDate checkOutDate, LocalDate dueDate, LocalDate dateReturned) {
         this.id = id;
         this.userId = userId;
         this.bookLicenseId = bookLicenseId;
-        this.transactionStatus = transactionStatus;
+        this.transactionStatusId = transactionStatusId;
         this.checkOutDate = checkOutDate;
         this.dueDate = dueDate;
         this.dateReturned = dateReturned;
@@ -48,12 +48,12 @@ public class BookRentalTransactionDTO {
         this.bookLicenseId = bookLicenseId;
     }
 
-    public String getTransactionStatus() {
-        return transactionStatus;
+    public Long getTransactionStatusId() {
+        return transactionStatusId;
     }
 
-    public void setTransactionStatus(String transactionStatus) {
-        this.transactionStatus = transactionStatus;
+    public void setTransactionStatusId(Long transactionStatusId) {
+        this.transactionStatusId = transactionStatusId;
     }
 
     public LocalDate getCheckOutDate() {

@@ -31,7 +31,9 @@ public class BookRentalTransactionController {
     public ResponseEntity<BookRentalTransactionDTO> returnBook(
                                                 @RequestParam Long bookLicenseId,
                                                 @RequestParam Long userId) {
+        System.out.println("Started the request");
         BookRentalTransactionDTO bookRentalTransactionDTO = bookRentalService.returnBook(bookLicenseId, userId);
+        System.out.println("passing to book rental service");
         return ResponseEntity.ok(bookRentalTransactionDTO);
     }
 

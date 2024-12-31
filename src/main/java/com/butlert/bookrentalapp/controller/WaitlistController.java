@@ -27,12 +27,12 @@ public class WaitlistController {
         waitlistService.removeUserFromWaitlist(bookId, userId);
     }
 
-    @GetMapping("/{id}")
+    @GetMapping("/user/{id}")
     public ResponseEntity<List<WaitlistUserDTO>> getWaitlistByUser(@PathVariable Long id) {
         return ResponseEntity.ok(waitlistService.getWaitlistByUser(id));
     }
 
-    @GetMapping("/{bookId}")
+    @GetMapping("/book/{bookId}")
     public ResponseEntity<List<WaitlistDTO>> getWaitlistByBookId(Long bookId) {
         return ResponseEntity.ok(waitlistService.getWaitlistByBookId(bookId));
     }

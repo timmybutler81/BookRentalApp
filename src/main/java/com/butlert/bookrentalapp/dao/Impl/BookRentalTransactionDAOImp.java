@@ -1,10 +1,16 @@
 package com.butlert.bookrentalapp.dao.Impl;
 
+import com.butlert.bookrentalapp.dao.book.BookLicenseDAO;
 import com.butlert.bookrentalapp.dao.rental.BookRentalTransactionDAO;
+import com.butlert.bookrentalapp.dao.rental.TransactionStatusDAO;
+import com.butlert.bookrentalapp.dao.user.UserDAO;
 import com.butlert.bookrentalapp.db.entity.rental.BookRentalTransaction;
 import com.butlert.bookrentalapp.db.mapper.rental.BookRentalTransactionMapper;
 import com.butlert.bookrentalapp.db.repository.rental.BookRentalTransactionRepository;
+import com.butlert.bookrentalapp.dto.book.BookLicenseDTO;
 import com.butlert.bookrentalapp.dto.rental.BookRentalTransactionDTO;
+import com.butlert.bookrentalapp.dto.rental.TransactionStatusDTO;
+import com.butlert.bookrentalapp.dto.user.UserDTO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 
@@ -17,9 +23,22 @@ public class BookRentalTransactionDAOImp implements BookRentalTransactionDAO {
     @Autowired
     private BookRentalTransactionRepository bookRentalTransactionRepository;
 
+    @Autowired
+    private UserDAO userDAO;
+
+    @Autowired
+    private BookLicenseDAO bookLicenseDAO;
+
+    @Autowired
+    private TransactionStatusDAO transactionStatusDAO;
+
     @Override
     public BookRentalTransactionDTO saveTransaction(BookRentalTransactionDTO transactionDTO) {
-        BookRentalTransaction transaction = BookRentalTransactionMapper.toEntity(transactionDTO);
+        //i couldn't find a better way to do this
+        UserDTO userDTO = userDAO.findUserById(transactionDTO.getUserId());
+        BookLicenseDTO bookLicenseDTO = bookLicenseDAO.findLicenseById(transactionDTO.getBookLicenseId());
+        TransactionStatusDTO transactionStatusDTO = transactionStatusDAO.findTransactionStatusById(transactionDTO.getTransactionStatusId());
+        BookRentalTransaction transaction = BookRentalTransactionMapper.toEntity(transactionDTO, userDTO, bookLicenseDTO, transactionStatusDTO);
         BookRentalTransaction savedTransaction = bookRentalTransactionRepository.save(transaction);
         return BookRentalTransactionMapper.toDTO(savedTransaction);
     }
@@ -50,6 +69,7 @@ public class BookRentalTransactionDAOImp implements BookRentalTransactionDAO {
     @Override
     public BookRentalTransactionDTO findTransactionByLicenseAndUser (Long licenseId, Long userId) {
         BookRentalTransaction bookRentalTransaction = bookRentalTransactionRepository.findTransactionByLicenseAndUser(licenseId, userId);
+        System.out.println("in dao impl: " + bookRentalTransaction);
         return BookRentalTransactionMapper.toDTO(bookRentalTransaction);
     }
 

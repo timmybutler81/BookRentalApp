@@ -41,7 +41,6 @@ public class BookRentalService {
     @Autowired
     private BookRentalTransactionDAO bookRentalTransactionDAO;
 
-
     public BookRentalTransactionDTO checkoutBook(Long licenseId, Long userId) {
         //validate book license
         BookLicenseDTO bookLicenseDTO = bookLicenseDAO.findLicenseById(licenseId);
@@ -57,7 +56,7 @@ public class BookRentalService {
         BookRentalTransactionDTO bookRentalTransactionDTO = new BookRentalTransactionDTO();
         bookRentalTransactionDTO.setBookLicenseId(bookLicenseDTO.getId());
         bookRentalTransactionDTO.setUserId(userDTO.getId());
-        bookRentalTransactionDTO.setTransactionStatus("Success");
+        bookRentalTransactionDTO.setTransactionStatusId(1L);
         bookRentalTransactionDTO.setCheckOutDate(LocalDate.now());
         bookRentalTransactionDTO.setDueDate(LocalDate.now().plusDays(userTypeDAO.findCheckoutDurationByUserType(userDTO.getUserTypeId())));
 
@@ -66,26 +65,27 @@ public class BookRentalService {
 
     public BookRentalTransactionDTO returnBook(Long licenseId, Long userId) {
         //make sure user has a checked out book
-        Optional<BookRentalTransactionDTO> existingTransaction = Optional.ofNullable(bookRentalTransactionDAO.findTransactionByLicenseAndUser(licenseId, userId));
-        if (existingTransaction.isEmpty()) {
+        System.out.println("Starting return book licenseId: " + licenseId + "userId: " + userId);
+        BookRentalTransactionDTO existingTransaction = bookRentalTransactionDAO.findTransactionByLicenseAndUser(licenseId, userId);
+        if (existingTransaction == null) {
             throw new IllegalArgumentException("No existing transaction found");
         }
-        //validate book license
+        //validate
+        System.out.println("Passed 1");
         BookLicenseDTO bookLicenseDTO = bookLicenseDAO.findLicenseById(licenseId);
         validator.validate(bookLicenseDTO);
-        //validate user
+        System.out.println("Passed 2");
         UserDTO userDTO = userDAO.findUserById(userId);
         validator.validate(userDTO);
+        //update
+        System.out.println("Passed 3");
         bookLicenseDAO.updateLicenseAvailability(licenseId, true);
-        //update existing found transaction
-        BookRentalTransactionDTO bookRentalTransactionUpdate = existingTransaction.get();
-        bookRentalTransactionUpdate.setTransactionStatus("Success");
-        bookRentalTransactionUpdate.setDateReturned(LocalDate.now());
-
+        existingTransaction.setTransactionStatusId(1L);
+        existingTransaction.setDateReturned(LocalDate.now());
         //check out next book
-        checkOutBookFromWaitList(bookLicenseDTO.getBook().getId());
-
-        return bookRentalTransactionDAO.saveTransaction(bookRentalTransactionUpdate);
+        System.out.println("Passed 4");
+        System.out.println("Finishing return book " + existingTransaction);
+        return bookRentalTransactionDAO.saveTransaction(existingTransaction);
     }
 
     public void checkOutBookFromWaitList(Long bookId) {

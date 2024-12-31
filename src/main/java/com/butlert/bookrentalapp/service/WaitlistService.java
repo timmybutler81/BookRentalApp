@@ -45,16 +45,19 @@ public class WaitlistService {
         validator.validate(bookDTO);
         UserDTO userDTO = userDAO.findUserById(userId);
         validator.validate(userDTO);
-        //check is book is not available
-        if (!bookLicenseDAO.findAvailabilityByBookId(bookId)) {
+
+        //I could not get this to work, I need help debuging it
+        //It kept throwing an error of long cannot be cast to Boolean
+        /*if (!bookLicenseDAO.findAvailabilityByBookId(bookId)) {
             throw new IllegalArgumentException("Book has availability, not adding to waitlist");
-        }
+        }*/
 
         Waitlist waitlist = new Waitlist();
         waitlist.setUserId(userId);
         waitlist.setBookId(bookId);
         waitlist.setWaitlistStatus("Pending");
         waitlist.setWaitlistAddDate(LocalDate.now());
+        waitlist.setProcessedFlag(false);
         return WaitlistMapper.toDTO(waitlistDAO.saveToWaitlist(waitlist));
     }
 
@@ -64,15 +67,19 @@ public class WaitlistService {
         UserDTO userDTO = userDAO.findUserById(userId);
         validator.validate(userDTO);
         //check user is on waitlist
+
+        //same here
+        /*
         if (!waitlistDAO.existsWaitlistByUserIdAndBookId(bookId, userId)) {
             throw new IllegalArgumentException("User is not on waitlist");
-        }
+        }*/
 
         Waitlist waitlist = new Waitlist();
         waitlist.setUserId(userId);
         waitlist.setBookId(bookId);
         waitlist.setWaitlistStatus("Complete");
         waitlist.setProcessedFlag(true);
+        waitlistDAO.saveToWaitlist(waitlist);
     }
 
     public List<WaitlistUserDTO> getWaitlistByUser(Long userId) {
@@ -90,14 +97,8 @@ public class WaitlistService {
     }
 
     public BookDetailsWithWaitTimeDTO getBookDetailsWithWaitTime(Long bookId, Long userId) {
-        // Get book details
         BookDTO book = bookDAO.findBookById(bookId);
-
-        // Calculate wait days
         int estimatedWaitDays = waitlistUserDAO.calculateEstimatedWaitDays(bookId, userId);
-
-        // Return details with wait time
         return new BookDetailsWithWaitTimeDTO(book, estimatedWaitDays);
     }
-
 }

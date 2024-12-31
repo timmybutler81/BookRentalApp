@@ -1,7 +1,6 @@
 package com.butlert.bookrentalapp.db.repository;
 
 import com.butlert.bookrentalapp.db.entity.Waitlist;
-import com.butlert.bookrentalapp.dto.WaitlistDTO;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
@@ -17,7 +16,8 @@ public interface WaitlistRepository extends JpaRepository<Waitlist, Long> {
 
     List<Waitlist> findWaitlistsByUserId(Long userId);
 
-    List<Waitlist> findWaitlistByBookId(Long bookId);
+    @Query(value = "SELECT * FROM waitlist WHERE processed_flag = 'N' AND book_id = :bookId", nativeQuery = true)
+    List<Waitlist> findWaitlistByBookId(@Param("bookId") Long bookId);
 
     @Query(value = "SELECT user_id FROM waitlist WHERE book_id = :bookId AND waitlist_status = 'Pending' AND processed_flag = 'N' ORDER BY waitlist_add_date ASC", nativeQuery = true)
     Long nextUserOnWaitlistByBookId(@Param("bookId") Long bookId);

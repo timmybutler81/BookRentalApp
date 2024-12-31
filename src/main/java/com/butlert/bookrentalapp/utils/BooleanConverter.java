@@ -7,18 +7,18 @@ import jakarta.persistence.Converter;
 public class BooleanConverter implements AttributeConverter<Boolean, String> {
 
     @Override
-    public String convertToDatabaseColumn(Boolean aBoolean) {
-        if (aBoolean == null) {
-            return null;
+    public String convertToDatabaseColumn(Boolean attribute) {
+        if (attribute == null) {
+            return "N";
         }
-        return aBoolean ? "Y" : "N";
+        return attribute ? "Y" : "N";
     }
 
     @Override
-    public Boolean convertToEntityAttribute(String data) {
-        if (data == null) {
-            return null;
+    public Boolean convertToEntityAttribute(String dbData) {
+        if (dbData == null || dbData.isBlank()) {
+            return false;
         }
-        return data.equals("Y");
+        return "Y".equalsIgnoreCase(dbData);
     }
 }

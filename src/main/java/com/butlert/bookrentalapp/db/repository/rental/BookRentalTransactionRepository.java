@@ -13,7 +13,7 @@ import java.util.Optional;
 public interface BookRentalTransactionRepository extends JpaRepository<BookRentalTransaction, Long> {
     List<BookRentalTransaction> findTransactionByBookLicenseId(Long bookLicenseId);
 
-    @Query(value = "SELECT * FROM book_rental_transaction WHERE date_returned = null and book_license_id = :licenseId and user_id = :userId", nativeQuery = true)
+    @Query(value = "SELECT * FROM book_rental_transaction WHERE date_returned is null and book_license_id = :licenseId and user_id = :userId", nativeQuery = true)
     BookRentalTransaction findTransactionByLicenseAndUser(@Param("licenseId") Long licenseId, @Param("userId") Long userId);
 
     @Query(value = "SELECT * FROM book_rental_transaction WHERE user_id = :userId", nativeQuery = true)
