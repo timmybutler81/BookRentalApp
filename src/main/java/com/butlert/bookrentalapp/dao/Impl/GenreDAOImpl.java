@@ -1,11 +1,12 @@
 package com.butlert.bookrentalapp.dao.Impl;
 
-import com.butlert.bookrentalapp.dao.GenreDAO;
-import com.butlert.bookrentalapp.db.entity.Genre;
-import com.butlert.bookrentalapp.db.mapper.GenreMapper;
-import com.butlert.bookrentalapp.db.repository.GenreRepository;
-import com.butlert.bookrentalapp.dto.GenreDTO;
+import com.butlert.bookrentalapp.dao.book.GenreDAO;
+import com.butlert.bookrentalapp.db.entity.book.Genre;
+import com.butlert.bookrentalapp.db.mapper.book.GenreMapper;
+import com.butlert.bookrentalapp.db.repository.book.GenreRepository;
+import com.butlert.bookrentalapp.dto.book.GenreDTO;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
@@ -18,18 +19,28 @@ public class GenreDAOImpl implements GenreDAO {
     private GenreRepository genreRepository;
 
     @Override
-    public List<GenreDTO> findAllGenres() {
-        return genreRepository.findAll().stream().map(GenreMapper::toDTO).collect(Collectors.toList());
+    public GenreDTO saveGenre(GenreDTO genreDTO) {
+        Genre genre = GenreMapper.toEntity(genreDTO);
+        Genre savedGenre = genreRepository.save(genre);
+        return GenreMapper.toDTO(savedGenre);
     }
 
     @Override
     public GenreDTO findGenreById(Long id) {
-        return genreRepository.findById(id).map(GenreMapper::toDTO).orElseThrow(() -> new RuntimeException("Genre Not Found"));
+        Genre genre = genreRepository.findById(id)
+                .orElseThrow(() -> new RuntimeException("Genre not found"));
+        return GenreMapper.toDTO(genre);
     }
 
     @Override
-    public GenreDTO saveGenre(Genre genre) {
-        Genre savedGenre = genreRepository.save(genre);
-        return GenreMapper.toDTO(savedGenre);
+    public List<GenreDTO> findAllGenres() {
+        return genreRepository.findAll()
+                .stream()
+                .map(GenreMapper::toDTO)
+                .collect(Collectors.toList());
     }
+
+
+
+
 }

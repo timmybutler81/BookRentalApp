@@ -1,10 +1,10 @@
 package com.butlert.bookrentalapp.dao.Impl;
 
-import com.butlert.bookrentalapp.dao.BookStatusDAO;
-import com.butlert.bookrentalapp.db.entity.BookStatus;
-import com.butlert.bookrentalapp.db.mapper.BookStatusMapper;
-import com.butlert.bookrentalapp.db.repository.BookStatusRepository;
-import com.butlert.bookrentalapp.dto.BookStatusDTO;
+import com.butlert.bookrentalapp.dao.book.BookStatusDAO;
+import com.butlert.bookrentalapp.db.entity.book.BookStatus;
+import com.butlert.bookrentalapp.db.mapper.book.BookStatusMapper;
+import com.butlert.bookrentalapp.db.repository.book.BookStatusRepository;
+import com.butlert.bookrentalapp.dto.book.BookStatusDTO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 
@@ -17,11 +17,11 @@ public class BookStatusDAOImp implements BookStatusDAO {
     @Autowired
     private BookStatusRepository bookStatusRepository;
 
-
     @Override
-    public List<BookStatusDTO> findAllBookStatuses() {
-        return bookStatusRepository.findAll()
-                .stream().map(BookStatusMapper::toDTO).collect(Collectors.toList());
+    public BookStatusDTO saveBookStatus(BookStatusDTO bookStatusDTO) {
+        BookStatus BookStatus = BookStatusMapper.toEntity(bookStatusDTO);
+        BookStatus savedBookStatus = bookStatusRepository.save(BookStatus);
+        return BookStatusMapper.toDTO(savedBookStatus);
     }
 
     @Override
@@ -32,8 +32,10 @@ public class BookStatusDAOImp implements BookStatusDAO {
     }
 
     @Override
-    public BookStatusDTO saveBookStatus(BookStatus bookStatus) {
-        BookStatus savedBookStatus = bookStatusRepository.save(bookStatus);
-        return BookStatusMapper.toDTO(savedBookStatus);
+    public List<BookStatusDTO> findAllBookStatuses() {
+        return bookStatusRepository.findAll()
+                .stream()
+                .map(BookStatusMapper::toDTO)
+                .collect(Collectors.toList());
     }
 }

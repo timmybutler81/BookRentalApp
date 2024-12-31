@@ -1,10 +1,10 @@
 package com.butlert.bookrentalapp.dao.Impl;
 
-import com.butlert.bookrentalapp.dao.TransactionStatusDAO;
-import com.butlert.bookrentalapp.db.entity.TransactionStatus;
-import com.butlert.bookrentalapp.db.mapper.TransactionStatusMapper;
-import com.butlert.bookrentalapp.db.repository.TransactionStatusRepository;
-import com.butlert.bookrentalapp.dto.TransactionStatusDTO;
+import com.butlert.bookrentalapp.dao.rental.TransactionStatusDAO;
+import com.butlert.bookrentalapp.db.entity.rental.TransactionStatus;
+import com.butlert.bookrentalapp.db.mapper.rental.TransactionStatusMapper;
+import com.butlert.bookrentalapp.db.repository.rental.TransactionStatusRepository;
+import com.butlert.bookrentalapp.dto.rental.TransactionStatusDTO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 
@@ -18,6 +18,20 @@ public class TransactionStatusDAOImp implements TransactionStatusDAO {
     private TransactionStatusRepository transactionStatusRepository;
 
     @Override
+    public TransactionStatusDTO saveTransactionStatus(TransactionStatusDTO transactionStatusDTO) {
+        TransactionStatus transactionStatus = TransactionStatusMapper.toEntity(transactionStatusDTO);
+        TransactionStatus savedTransactionStatus = transactionStatusRepository.save(transactionStatus);
+        return TransactionStatusMapper.toDTO(savedTransactionStatus);
+    }
+
+    @Override
+    public TransactionStatusDTO findTransactionStatusById(Long id) {
+        TransactionStatus transactionStatus = transactionStatusRepository.findById(id)
+                .orElseThrow(() -> new RuntimeException("Transaction Status not found"));
+        return TransactionStatusMapper.toDTO(transactionStatus);
+    }
+
+    @Override
     public List<TransactionStatusDTO> findAllTransactionStatuses() {
         return transactionStatusRepository.findAll()
                 .stream()
@@ -25,23 +39,7 @@ public class TransactionStatusDAOImp implements TransactionStatusDAO {
                 .collect(Collectors.toList());
     }
 
-    @Override
-    public TransactionStatusDTO findTransactionStatusById(Long id) {
-        return transactionStatusRepository.findById(id)
-                .map(TransactionStatusMapper::toDTO)
-                .orElseThrow(() -> new RuntimeException("Transaction Status not found"));
-    }
 
-    @Override
-    public TransactionStatusDTO saveTransactionStatus(TransactionStatus transactionStatus) {
-        TransactionStatus savedTransactionStatus = transactionStatusRepository.save(transactionStatus);
-        return TransactionStatusMapper.toDTO(savedTransactionStatus);
-    }
 
-    @Override
-    public TransactionStatusDTO findByTransactionStatusName(String transactionName) {
-        return transactionStatusRepository.findByTransactionStatusName(transactionName)
-                .map(TransactionStatusMapper::toDTO)
-                .orElseThrow(() -> new RuntimeException("Transaction Status not found"));
-    }
+
 }

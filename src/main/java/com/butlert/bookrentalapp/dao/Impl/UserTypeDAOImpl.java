@@ -1,10 +1,10 @@
 package com.butlert.bookrentalapp.dao.Impl;
 
-import com.butlert.bookrentalapp.dao.UserTypeDAO;
-import com.butlert.bookrentalapp.db.entity.UserType;
-import com.butlert.bookrentalapp.db.mapper.UserTypeMapper;
-import com.butlert.bookrentalapp.db.repository.UserTypeRepository;
-import com.butlert.bookrentalapp.dto.UserTypeDTO;
+import com.butlert.bookrentalapp.dao.user.UserTypeDAO;
+import com.butlert.bookrentalapp.db.entity.user.UserType;
+import com.butlert.bookrentalapp.db.mapper.user.UserTypeMapper;
+import com.butlert.bookrentalapp.db.repository.user.UserTypeRepository;
+import com.butlert.bookrentalapp.dto.user.UserTypeDTO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 
@@ -18,6 +18,20 @@ public class UserTypeDAOImpl implements UserTypeDAO {
     private UserTypeRepository userTypeRepository;
 
     @Override
+    public UserTypeDTO saveUserType(UserTypeDTO userTypeDTO) {
+        UserType userType = UserTypeMapper.toEntity(userTypeDTO);
+        UserType savedUserType = userTypeRepository.save(userType);
+        return UserTypeMapper.toDTO(savedUserType);
+    }
+
+    @Override
+    public UserTypeDTO findUserTypeById(Long id) {
+        UserType userType = userTypeRepository.findById(id)
+                .orElseThrow(() -> new RuntimeException("User Type not found"));
+        return UserTypeMapper.toDTO(userType);
+    }
+
+    @Override
     public List<UserTypeDTO> findAllUserTypes() {
         return userTypeRepository.findAll()
                 .stream()
@@ -25,16 +39,7 @@ public class UserTypeDAOImpl implements UserTypeDAO {
                 .collect(Collectors.toList());
     }
 
-    @Override
-    public UserTypeDTO findUserTypeById(Long id) {
-        return userTypeRepository.findById(id)
-                .map(UserTypeMapper::toDTO)
-                .orElseThrow(() -> new RuntimeException("User Type Not Found"));
-    }
 
-    @Override
-    public UserTypeDTO saveUserType(UserType userType) {
-        UserType savedUserType = userTypeRepository.save(userType);
-        return UserTypeMapper.toDTO(savedUserType);
-    }
+
+
 }
