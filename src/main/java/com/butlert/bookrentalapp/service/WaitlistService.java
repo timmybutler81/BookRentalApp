@@ -45,13 +45,9 @@ public class WaitlistService {
         validator.validate(bookDTO);
         UserDTO userDTO = userDAO.findUserById(userId);
         validator.validate(userDTO);
-
-        //I could not get this to work, I need help debuging it
-        //It kept throwing an error of long cannot be cast to Boolean
-        /*if (!bookLicenseDAO.findAvailabilityByBookId(bookId)) {
+        if (bookLicenseDAO.findAvailabilityByBookId(bookId)) {
             throw new IllegalArgumentException("Book has availability, not adding to waitlist");
-        }*/
-
+        }
         Waitlist waitlist = new Waitlist();
         waitlist.setUserId(userId);
         waitlist.setBookId(bookId);
@@ -67,19 +63,11 @@ public class WaitlistService {
         UserDTO userDTO = userDAO.findUserById(userId);
         validator.validate(userDTO);
         //check user is on waitlist
-
-        //same here
-        /*
-        if (!waitlistDAO.existsWaitlistByUserIdAndBookId(bookId, userId)) {
+        if (waitlistDAO.existsWaitlistByUserIdAndBookId(bookId, userId)) {
             throw new IllegalArgumentException("User is not on waitlist");
-        }*/
+        }
 
-        Waitlist waitlist = new Waitlist();
-        waitlist.setUserId(userId);
-        waitlist.setBookId(bookId);
-        waitlist.setWaitlistStatus("Complete");
-        waitlist.setProcessedFlag(true);
-        waitlistDAO.saveToWaitlist(waitlist);
+        waitlistDAO.updateWaitlist(bookId, userId, "Complete", "Y");
     }
 
     public List<WaitlistUserDTO> getWaitlistByUser(Long userId) {

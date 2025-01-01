@@ -12,6 +12,6 @@ import java.util.List;
 public interface BookLicenseRepository extends JpaRepository<BookLicense, Long> {
     List<BookLicense> findByBookId(Long bookId);
 
-    @Query(value = "SELECT CASE WHEN EXISTS(SELECT 1 FROM book_license WHERE available = 'Y' AND active_flag = 'Y' AND book_id = :bookId) THEN TRUE ELSE FALSE END", nativeQuery = true)
-    boolean findAvailabilityByBookId(@Param("bookId") Long bookId);
+    @Query(value = "SELECT COUNT(*) > 0 FROM book_license WHERE available = 'Y' AND active_flag = 'Y' AND book_id = :bookId", nativeQuery = true)
+    int findAvailabilityByBookId(@Param("bookId") Long bookId);
 }

@@ -58,7 +58,11 @@ public class BookLicenseDAOImp implements BookLicenseDAO {
 
     @Override
     public boolean findAvailabilityByBookId(Long bookId) {
-        return bookLicenseRepository.findAvailabilityByBookId(bookId);
+        boolean temp = false;
+        if (bookLicenseRepository.findAvailabilityByBookId(bookId) > 0) {
+            temp = true;
+        }
+        return temp;
     }
 
     public Optional<BookLicenseDTO> findAvailableLicenseByBookId(Long bookId) {

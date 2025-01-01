@@ -25,7 +25,11 @@ public class WaitlistDAOImp implements WaitlistDAO {
 
     @Override
     public boolean existsWaitlistByUserIdAndBookId(Long userId, Long bookId) {
-        return waitlistRepository.existsWaitlistByUserIdAndBookId(userId, bookId);
+        boolean temp = false;
+        if (waitlistRepository.existsWaitlistByUserIdAndBookId(userId, bookId) > 0) {
+            temp = true;
+        }
+        return temp;
     }
 
     @Override
@@ -42,5 +46,15 @@ public class WaitlistDAOImp implements WaitlistDAO {
                 .stream()
                 .map(WaitlistMapper::toDTO)
                 .collect(Collectors.toList());
+    }
+
+    @Override
+    public Waitlist findWaitlistByBookIdAndUserId(Long bookId, Long userId) {
+        return waitlistRepository.findWaitlistByBookIdAndUserId(bookId, userId);
+    }
+
+    @Override
+    public void updateWaitlist(Long bookId, Long userId, String waitlistStatus, String processedFlag) {
+        waitlistRepository.updateWaitlist(bookId, userId, waitlistStatus, processedFlag);
     }
 }
