@@ -2,6 +2,7 @@ package com.butlert.bookrentalapp.db.entity.book;
 
 import com.butlert.bookrentalapp.utils.BooleanConverter;
 import jakarta.persistence.*;
+import jakarta.validation.constraints.NotNull;
 
 @Entity
 @Table(name = "book_license")
@@ -12,11 +13,11 @@ public class BookLicense {
     @Column(name = "BOOK_LICENSE_ID")
     private Long id;
 
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "BOOK_ID", referencedColumnName = "BOOK_ID", nullable = false)
     private Book book;
 
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "BOOK_STATUS_ID", referencedColumnName = "BOOK_STATUS_ID")
     private BookStatus bookStatus;
 

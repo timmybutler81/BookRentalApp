@@ -2,7 +2,6 @@ package com.butlert.bookrentalapp.db.entity.book;
 
 import com.butlert.bookrentalapp.utils.BooleanConverter;
 import jakarta.persistence.*;
-
 import java.util.ArrayList;
 import java.util.List;
 
@@ -18,13 +17,13 @@ public class Book {
     @Column(name = "GENRE_ID")
     private String genre;
 
-    @Column(name = "TITLE")
+    @Column(name = "TITLE", nullable = false)
     private String title;
 
-    @Column(name = "AUTHOR")
+    @Column(name = "AUTHOR", nullable = false)
     private String author;
 
-    @Column(name = "ISBN")
+    @Column(name = "ISBN", unique = true, nullable = false)
     private String isbn;
 
     @Column(name = "PUBLISHER")
@@ -41,6 +40,7 @@ public class Book {
     private List<BookLicense> licenses = new ArrayList<>();
 
     public Book() {
+
     }
 
     public Book(Long id, String genre, String title, String author, String isbn, String publisher, Integer publishYear, boolean activeFlag) {
@@ -136,4 +136,3 @@ public class Book {
         license.setBook(null);
     }
 }
-

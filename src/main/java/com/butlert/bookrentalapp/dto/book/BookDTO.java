@@ -1,15 +1,38 @@
 package com.butlert.bookrentalapp.dto.book;
 
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotNull;
+import jakarta.validation.constraints.Size;
+
 public class BookDTO {
+
     private Long id;
+
+    @NotBlank(message = "Genre cannot be blank")
+    @Size(max = 100, message = "Genre must not exceed 100 characters")
     private String genre;
+
+    @NotBlank(message = "Title cannot be blank")
+    @Size(max = 100, message = "Title must not exceed 100 characters")
     private String title;
+
+    @NotBlank(message = "Author cannot be blank")
+    @Size(max = 100, message = "Author must not exceed 100 characters")
     private String author;
+
+    @NotBlank(message = "ISBN cannot be blank")
     private String isbn;
+
+    @NotBlank(message = "Publisher cannot be blank")
+    @Size(max = 100, message = "Publisher must not exceed 100 characters")
     private String publisher;
+
+    @NotNull(message = "Publish Year cannot be null")
     private Integer publishYear;
+
     private boolean activeFlag;
 
+    // Constructors, Getters, and Setters
     public BookDTO() {
     }
 

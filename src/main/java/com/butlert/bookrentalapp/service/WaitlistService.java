@@ -2,7 +2,6 @@ package com.butlert.bookrentalapp.service;
 
 import com.butlert.bookrentalapp.dao.WaitlistDAO;
 import com.butlert.bookrentalapp.dao.WaitlistUserDAO;
-import com.butlert.bookrentalapp.dao.book.BookDAO;
 import com.butlert.bookrentalapp.dao.book.BookLicenseDAO;
 import com.butlert.bookrentalapp.dao.user.UserDAO;
 import com.butlert.bookrentalapp.db.entity.Waitlist;
@@ -12,6 +11,8 @@ import com.butlert.bookrentalapp.dto.WaitlistUserDTO;
 import com.butlert.bookrentalapp.dto.book.BookDTO;
 import com.butlert.bookrentalapp.dto.book.BookDetailsWithWaitTimeDTO;
 import com.butlert.bookrentalapp.dto.user.UserDTO;
+import com.butlert.bookrentalapp.enums.WaitlistStatus;
+import com.butlert.bookrentalapp.service.book.BookService;
 import com.butlert.bookrentalapp.validator.ValidatorImp;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -22,26 +23,31 @@ import java.util.List;
 @Service
 public class WaitlistService {
 
-    @Autowired
-    private BookDAO bookDAO;
+    private final BookService bookService;
+    private final UserDAO userDAO;
+    private final BookLicenseDAO bookLicenseDAO;
+    private final WaitlistDAO waitlistDAO;
+    private final WaitlistUserDAO waitlistUserDAO;
+    private final ValidatorImp validator;
 
     @Autowired
-    private UserDAO userDAO;
-
-    @Autowired
-    private BookLicenseDAO bookLicenseDAO;
-
-    @Autowired
-    private WaitlistDAO waitlistDAO;
-
-    @Autowired
-    private WaitlistUserDAO waitlistUserDAO;
-
-    @Autowired
-    private ValidatorImp validator;
+    public WaitlistService(
+            BookService bookService,
+            UserDAO userDAO,
+            BookLicenseDAO bookLicenseDAO,
+            WaitlistDAO waitlistDAO,
+            WaitlistUserDAO waitlistUserDAO,
+            ValidatorImp validator) {
+        this.bookService = bookService;
+        this.userDAO = userDAO;
+        this.bookLicenseDAO = bookLicenseDAO;
+        this.waitlistDAO = waitlistDAO;
+        this.waitlistUserDAO = waitlistUserDAO;
+        this.validator = validator;
+    }
 
     public WaitlistDTO addUserToWaitlist(Long bookId, Long userId) {
-        BookDTO bookDTO = bookDAO.findBookById(bookId);
+        BookDTO bookDTO = bookService.getBookById(bookId);
         validator.validate(bookDTO);
         UserDTO userDTO = userDAO.findUserById(userId);
         validator.validate(userDTO);
@@ -58,16 +64,14 @@ public class WaitlistService {
     }
 
     public void removeUserFromWaitlist(Long bookId, Long userId) {
-        BookDTO bookDTO = bookDAO.findBookById(bookId);
+        BookDTO bookDTO = bookService.getBookById(bookId);
         validator.validate(bookDTO);
         UserDTO userDTO = userDAO.findUserById(userId);
         validator.validate(userDTO);
-        //check user is on waitlist
-        if (waitlistDAO.existsWaitlistByUserIdAndBookId(bookId, userId)) {
+        if (!waitlistDAO.existsWaitlistByUserIdAndBookId(bookId, userId)) {
             throw new IllegalArgumentException("User is not on waitlist");
         }
-
-        waitlistDAO.updateWaitlist(bookId, userId, "Complete", "Y");
+        waitlistDAO.updateWaitlist(bookId, userId, String.valueOf(WaitlistStatus.COMPLETE), "Y");
     }
 
     public List<WaitlistUserDTO> getWaitlistByUser(Long userId) {
@@ -85,7 +89,7 @@ public class WaitlistService {
     }
 
     public BookDetailsWithWaitTimeDTO getBookDetailsWithWaitTime(Long bookId, Long userId) {
-        BookDTO book = bookDAO.findBookById(bookId);
+        BookDTO book = bookService.getBookById(bookId);
         int estimatedWaitDays = waitlistUserDAO.calculateEstimatedWaitDays(bookId, userId);
         return new BookDetailsWithWaitTimeDTO(book, estimatedWaitDays);
     }

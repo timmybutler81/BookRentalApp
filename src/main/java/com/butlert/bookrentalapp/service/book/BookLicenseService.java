@@ -1,64 +1,66 @@
 package com.butlert.bookrentalapp.service.book;
 
-import com.butlert.bookrentalapp.dao.book.BookDAO;
-import com.butlert.bookrentalapp.dao.book.BookLicenseDAO;
-import com.butlert.bookrentalapp.dao.book.BookStatusDAO;
-import com.butlert.bookrentalapp.db.mapper.book.BookStatusMapper;
+import com.butlert.bookrentalapp.db.mapper.book.BookLicenseMapper;
+import com.butlert.bookrentalapp.db.repository.book.BookLicenseRepository;
 import com.butlert.bookrentalapp.dto.book.BookDTO;
 import com.butlert.bookrentalapp.dto.book.BookLicenseDTO;
+import com.butlert.bookrentalapp.utils.exceptions.BookNotFoundException;
 import com.butlert.bookrentalapp.validator.ValidatorImp;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
 public class BookLicenseService {
 
-    @Autowired
-    private ValidatorImp validatorImp;
+    private final ValidatorImp validatorImp;
+    private final BookLicenseRepository bookLicenseRepository;
+    private final BookService bookService;
 
     @Autowired
-    private BookLicenseDAO bookLicenseDAO;
+    public BookLicenseService(
+            ValidatorImp validatorImp,
+            BookLicenseRepository bookLicenseRepository,
+            BookService bookService) {
+        this.validatorImp = validatorImp;
+        this.bookLicenseRepository = bookLicenseRepository;
+        this.bookService = bookService;
+    }
 
-    @Autowired
-    private BookStatusDAO bookStatusDAO;
-
-    @Autowired
-    private BookDAO bookDAO;
-
-    public BookLicenseDTO addOrUpdateLicenseToBook(Long bookId, String licenseKey, Long statusId, boolean activeFlag, boolean available) {
-        //validate inputs
-        BookLicenseDTO bookLicenseDTO = new BookLicenseDTO();
-        bookLicenseDTO.setId(bookId);
-        bookLicenseDTO.setLicenseKey(licenseKey);
-        bookLicenseDTO.setBookStatusId(statusId);
-        bookLicenseDTO.setActiveFlag(activeFlag);
-        bookLicenseDTO.setAvailable(available);
+    public BookLicenseDTO addLicenseToBook(BookLicenseDTO bookLicenseDTO) {
         validatorImp.validate(bookLicenseDTO);
-
-        //set book license
-        BookDTO bookDTO = bookDAO.findBookById(bookId);
-        BookLicenseDTO savedBookLicenseDTO = new BookLicenseDTO();
-        savedBookLicenseDTO.setLicenseKey(licenseKey);
-        savedBookLicenseDTO.setBook(bookDTO);
-        savedBookLicenseDTO.setActiveFlag(activeFlag);
-        savedBookLicenseDTO.setAvailable(available);
-        savedBookLicenseDTO.setBookStatus(
-                BookStatusMapper.toEntity(bookStatusDAO.findBookStatusById(statusId)));
-
-        return bookLicenseDAO.saveBookLicense(savedBookLicenseDTO);
+        Long bookId = bookLicenseDTO.getBook().getId();
+        BookDTO bookDTO = bookService.getBookById(bookId);
+        if (bookDTO == null) {
+            throw new BookNotFoundException("Book not found with ID: " + bookId);
+        }
+        return BookLicenseMapper.toDTO(
+                bookLicenseRepository.save(
+                        BookLicenseMapper.toEntity(bookLicenseDTO)
+                )
+        );
     }
 
     public BookLicenseDTO getBookLicenseById(Long id) {
-        return bookLicenseDAO.findLicenseById(id);
+        return bookLicenseRepository.findById(id)
+                .map(BookLicenseMapper::toDTO)
+                .orElseThrow(() -> new BookNotFoundException("Book license not found with ID: " + id));
     }
 
     public List<BookLicenseDTO> getAllBookLicenses() {
-        return bookLicenseDAO.findAllBookLicenses();
+        return bookLicenseRepository.findAll()
+                .stream()
+                .map(BookLicenseMapper::toDTO)
+                .collect(Collectors.toList());
     }
 
     public List<BookLicenseDTO> getLicensesForBook(Long bookId) {
-        return bookLicenseDAO.findLicensesByBookId(bookId);
+        bookService.getBookById(bookId);
+        return bookLicenseRepository.findByBookId(bookId)
+                .stream()
+                .map(BookLicenseMapper::toDTO)
+                .collect(Collectors.toList());
     }
 }

@@ -1,5 +1,7 @@
 package com.butlert.bookrentalapp.validator;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
@@ -12,6 +14,8 @@ import java.util.Map;
 public class ValidatorImp {
 
     private final Map<Class<?>, BaseValidator<?>> validators = new HashMap<>();
+
+    private static final Logger logger = LoggerFactory.getLogger(ValidatorImp.class);
 
     @Autowired
     public ValidatorImp(List<BaseValidator<?>> validatorList) {
@@ -27,6 +31,7 @@ public class ValidatorImp {
             throw new IllegalArgumentException("No Validator found for class: " + object.getClass().getName());
         }
         validator.validate(object);
+        logger.info("Validating for {}", object);
     }
 
     public Class<?> getGenericType(BaseValidator<?> validator) {

@@ -19,15 +19,15 @@ public class BookMapper {
     }
 
     public static Book toEntity(BookDTO bookDTO) {
-        Book book = new Book();
-        book.setId(bookDTO.getId());
-        book.setGenre(bookDTO.getGenre());
-        book.setTitle(bookDTO.getTitle());
-        book.setAuthor(bookDTO.getAuthor());
-        book.setIsbn(bookDTO.getIsbn());
-        book.setPublisher(bookDTO.getPublisher());
-        book.setPublishYear(bookDTO.getPublishYear());
-        book.setActiveFlag(bookDTO.isActiveFlag());
-        return book;
+        return new Book(
+                bookDTO.getId(),
+                bookDTO.getGenre(),
+                bookDTO.getTitle(),
+                bookDTO.getAuthor(),
+                bookDTO.getIsbn(),
+                bookDTO.getPublisher(),
+                bookDTO.getPublishYear(),
+                bookDTO.isActiveFlag()
+        );
     }
 }

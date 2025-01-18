@@ -1,24 +1,30 @@
 package com.butlert.bookrentalapp.dto.book;
 
 import com.butlert.bookrentalapp.db.entity.book.BookStatus;
+import jakarta.validation.constraints.NotBlank;
 
 public class BookLicenseDTO {
 
     private Long id;
     private BookDTO book;
-    private BookStatus bookStatus;
+    private BookStatusDTO bookStatusDTO;
+
+    @NotBlank(message = "Book Status ID cannot be blank")
     private Long bookStatusId;
+
+    @NotBlank(message = "License Key cannot be blank")
     private String licenseKey;
+
     private boolean activeFlag;
     private boolean available;
 
     public BookLicenseDTO() {
     }
 
-    public BookLicenseDTO(Long id, BookDTO book, BookStatus bookStatus, Long bookStatusId, String licenseKey, boolean activeFlag, boolean available) {
+    public BookLicenseDTO(Long id, BookDTO book, BookStatusDTO bookStatusDTO, Long bookStatusId, String licenseKey, boolean activeFlag, boolean available) {
         this.id = id;
         this.book = book;
-        this.bookStatus = bookStatus;
+        this.bookStatusDTO = bookStatusDTO;
         this.bookStatusId = bookStatusId;
         this.licenseKey = licenseKey;
         this.activeFlag = activeFlag;
@@ -49,12 +55,12 @@ public class BookLicenseDTO {
         this.book = book;
     }
 
-    public BookStatus getBookStatus() {
-        return bookStatus;
+    public BookStatusDTO getBookStatus() {
+        return bookStatusDTO;
     }
 
-    public void setBookStatus(BookStatus bookStatus) {
-        this.bookStatus = bookStatus;
+    public void setBookStatus(BookStatusDTO bookStatusDTO) {
+        this.bookStatusDTO = bookStatusDTO;
     }
 
     public String getLicenseKey() {

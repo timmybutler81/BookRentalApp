@@ -16,8 +16,8 @@ public class BookLicenseController {
     private BookLicenseService bookLicenseService;
 
     @PostMapping("/add")
-    public ResponseEntity<BookLicenseDTO> addOrUpdateLicenseToBook(@RequestBody BookLicenseDTO bookLicenseDTO) {
-        return ResponseEntity.ok(bookLicenseDTO);
+    public ResponseEntity<BookLicenseDTO> addLicenseToBook(@RequestBody BookLicenseDTO bookLicenseDTO) {
+        return ResponseEntity.ok(bookLicenseService.addLicenseToBook(bookLicenseDTO));
     }
 
     @GetMapping("/{id}")
