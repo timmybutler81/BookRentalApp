@@ -1,10 +1,11 @@
 package com.butlert.bookrentalapp.service.rental;
 
-import com.butlert.bookrentalapp.dao.book.BookDAO;
 import com.butlert.bookrentalapp.dao.book.BookLicenseDAO;
 import com.butlert.bookrentalapp.dao.rental.BookRentalTransactionDAO;
 import com.butlert.bookrentalapp.dao.user.UserDAO;
 import com.butlert.bookrentalapp.dao.user.UserTypeDAO;
+import com.butlert.bookrentalapp.db.mapper.book.BookMapper;
+import com.butlert.bookrentalapp.db.repository.book.BookRepository;
 import com.butlert.bookrentalapp.dto.book.BookDTO;
 import com.butlert.bookrentalapp.dto.book.BookLicenseDTO;
 import com.butlert.bookrentalapp.dto.rental.BookRentalTransactionDTO;
@@ -33,7 +34,7 @@ public class BookRentalService {
     private UserTypeDAO userTypeDAO;
 
     @Autowired
-    private BookDAO bookDAO;
+    private BookRepository bookRepository;
 
     @Autowired
     private WaitlistService waitlistService;
@@ -90,8 +91,9 @@ public class BookRentalService {
 
     public void checkOutBookFromWaitList(Long bookId) {
         Optional<BookLicenseDTO> bookLicenseDTO = bookLicenseDAO.findAvailableLicenseByBookId(bookId);
-        BookDTO bookDTO = bookDAO.findBookById(bookId);
-        validator.validate(bookDTO);
+        BookDTO bookDTO = bookRepository.findById(bookId)
+                .map(BookMapper::toDTO)
+                .orElseThrow(() -> new RuntimeException("Book not found"));
         UserDTO userDTO = waitlistService.getNextUserOnWaitlistByBookId(bookId);
         validator.validate(userDTO);
 
